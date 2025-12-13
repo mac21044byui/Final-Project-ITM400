@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Card Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        .grid { display: grid; grid-template-columns: repeat(4, 100px); gap: 10px; justify-content: center; margin-top: 20px; }
+        .card { width: 100px; height: 100px; background-color: #2c3e50; display: flex; justify-content: center; align-items: center; font-size: 2rem; color: white; cursor: pointer; border-radius: 5px; }
+        .flipped { background-color: #ecf0f1; color: #2c3e50; }
+        .matched { background-color: #27ae60; cursor: default; }
+    </style>
+</head>
+<body>
+    <h1>DevOps Match Game</h1>
+    <p>Find the matching infrastructure pairs!</p>
+    <div class="grid" id="game-grid"></div>
+    <script>
+        const cards = ['🐳', '🐳', '☁️', '☁️', '🔒', '🔒', '🚀', '🚀', '🐍', '🐍', '⚙️', '⚙️'];
+        let hasFlippedCard = false;
+        let lockBoard = false;
+        let firstCard, secondCard;
+
+        function shuffle(array) {
+            array.sort(() => 0.5 - Math.random());
+        }
+
+        function createBoard() {
+            const grid = document.getElementById('game-grid');
+            shuffle(cards);
+            cards.forEach(symbol => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.symbol = symbol;
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            this.classList.add('flipped');
+            this.innerText = this.dataset.symbol;
+
+            if (!hasFlippedCard) {
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
+            isMatch ? disableCards() : unflipCards();
+        }
+
+        function disableCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                firstCard.innerText = '';
+                secondCard.classList.remove('flipped');
+                secondCard.innerText = '';
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
