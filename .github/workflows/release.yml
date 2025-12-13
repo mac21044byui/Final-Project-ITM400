@@ -5,7 +5,22 @@ on:
     branches: [ "main" ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Run tests
+      run: pytest
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Code
@@ -38,7 +53,7 @@ jobs:
 
     - name: Terraform Apply
       # auto-approve skips the "are you sure?" prompt
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var="dockerhub_username=${{ secrets.DOCKER_USERNAME }}"
       working-directory: ./terraform
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
