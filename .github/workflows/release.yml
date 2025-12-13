@@ -38,7 +38,8 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/card-game:latest
+        # tags: ${{ secrets.DOCKER_USERNAME }}/card-game:latest
+        tags: sheltonmacamo7/card-game:latest
 
     # 2. Infrastructure as Code (Terraform)
     - name: Setup Terraform
