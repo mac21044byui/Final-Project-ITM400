@@ -54,8 +54,8 @@ resource "aws_instance" "app_server" {
               sudo apt-get install -y docker.io
               sudo systemctl start docker
               sudo systemctl enable docker
-              sudo docker pull YOUR_DOCKERHUB_USERNAME/card-game:latest
-              sudo docker run -d -p 80:5000 YOUR_DOCKERHUB_USERNAME/card-game:latest
+              sudo docker pull sheltonmacamo7/card-game:latest
+              sudo docker run -d -p 80:5000 sheltonmacamo7/card-game:latest
               EOF
 
   tags = {
